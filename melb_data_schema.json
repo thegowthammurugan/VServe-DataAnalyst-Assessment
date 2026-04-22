@@ -1,0 +1,26 @@
+{
+  "table_name": "melb_data",
+  "columns": {
+    "Suburb"        : "Suburb where the property is located",
+    "Address"       : "Street address of the property",
+    "Rooms"         : "Number of rooms in the property",
+    "Type"          : "Property type (h = House, u = Unit, t = Townhouse)",
+    "Price"         : "Sale price in AUD",
+    "Method"        : "Sale method (S = Sold, SP = Sold Prior, PI = Passed In, VB = Vendor Bid, SA = Sold After)",
+    "SellerG"       : "Real estate agent or agency name",
+    "Date"          : "Date of sale",
+    "Distance"      : "Distance from Melbourne CBD in kilometers",
+    "Postcode"      : "Postal code of the property",
+    "Bedroom2"      : "Number of bedrooms",
+    "Bathroom"      : "Number of bathrooms",
+    "Car"           : "Number of car parking spaces",
+    "Landsize"      : "Land size in square meters",
+    "BuildingArea"  : "Building area in square meters",
+    "YearBuilt"     : "Year the property was built",
+    "CouncilArea"   : "Local government council area",
+    "Lattitude"     : "Geographic latitude coordinate",
+    "Longtitude"    : "Geographic longitude coordinate",
+    "Regionname"    : "Metropolitan region classification",
+    "Propertycount" : "Number of properties in the suburb"
+  }
+}

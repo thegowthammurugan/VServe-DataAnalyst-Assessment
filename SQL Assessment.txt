@@ -1,0 +1,94 @@
+================================================================================
+SQL ASSESSMENT - DATA ANALYST POSITION
+================================================================================
+
+Instructions:
+- Write your SQL queries directly below each question
+- You may use any SQL dialect (PostgreSQL, MySQL, SQL Server, etc.)
+- Refer to melb_data.json for the table schema
+- Assume the data is loaded in a table named: melb_data
+
+================================================================================
+
+
+--------------------------------------------------------------------------------
+QUESTION 1
+--------------------------------------------------------------------------------
+
+Find all properties priced above their suburb's average price.
+
+Your query should return the relevant property details along with the suburb 
+average for comparison.
+
+
+-- Write your answer below this line:
+
+SELECT Suburb, Address, Price, Suburb_Avg
+FROM (
+    SELECT Suburb, Address, Price,
+           AVG(Price) OVER (PARTITION BY Suburb) AS Suburb_Avg
+    FROM melb_data
+) t
+WHERE Price > Suburb_Avg;
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 2
+--------------------------------------------------------------------------------
+
+Compare each suburb's first sale price to its last sale price.
+
+Your query should identify the earliest and latest sales per suburb and compute 
+the price difference or percentage change.
+
+
+-- Write your answer below this line:
+
+WITH ranked AS (
+    SELECT Suburb, Price,
+           ROW_NUMBER() OVER (PARTITION BY Suburb ORDER BY Date ASC)  AS rn_first,
+           ROW_NUMBER() OVER (PARTITION BY Suburb ORDER BY Date DESC) AS rn_last
+    FROM melb_data
+    WHERE Price IS NOT NULL
+)
+SELECT Suburb,
+       MAX(CASE WHEN rn_first = 1 THEN Price END) AS First_Sale_Price,
+       MAX(CASE WHEN rn_last  = 1 THEN Price END) AS Last_Sale_Price,
+       MAX(CASE WHEN rn_last  = 1 THEN Price END) - 
+       MAX(CASE WHEN rn_first = 1 THEN Price END) AS Price_Difference
+FROM ranked
+GROUP BY Suburb;
+
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 3
+--------------------------------------------------------------------------------
+
+For each region, find the top 5 real estate agents by total revenue.
+
+Your query should rank agents within each region based on their cumulative sales 
+value and return the top 5 per region.
+
+
+-- Write your answer below this line:
+
+WITH agent_revenue AS (
+    SELECT Regionname, SellerG,
+           SUM(Price) AS Total_Revenue,
+           RANK() OVER (PARTITION BY Regionname ORDER BY SUM(Price) DESC) AS rnk
+    FROM melb_data
+    GROUP BY Regionname, SellerG
+)
+SELECT Regionname, SellerG, Total_Revenue
+FROM agent_revenue
+WHERE rnk <= 5;
+
+
+
+
+================================================================================
+END OF ASSESSMENT
+================================================================================
